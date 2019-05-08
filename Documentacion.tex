@@ -1,0 +1,131 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{optidef}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+%Lo de arriba son como imports, no le heches cuenta ;)
+
+\title{
+        \textbf{Título del trabajo}\\
+        \medskip
+        \large{Trabajo de Curso}\\
+        \bigskip
+        Universidad de Sevilla\\ Ingeniería Informática Tecnologías Informáticas\\
+        Matemática aplicada a Sistemas de Información - Tercer curso}
+        
+\author{
+Juan Arteaga Carmona\\
+Herrera, Sevilla, España \\
+\texttt{JuanArteaga@andalu30.me}\\
+Participación: 50\%
+\and
+Enrique Ramos Miró\\
+Sanlúcar la Mayor, Sevilla, España \\
+\texttt{kikeramos9@gmail.com}\\
+Participación: 50\%
+}
+
+
+
+\begin{document}
+
+%Portada con titulo e integrantes
+\maketitle
+\newpage
+
+%Índice de la memoria
+\tableofcontents
+\listoftables
+\listoffigures
+\newpage
+
+%Documento----
+\section{Descripción del problema general de asignación}
+A continuación se muestra el ejercicio 15 del documento ``Supplementary Exercises'', el cual ha sido asignado a nuestro grupo.
+
+\subsection{Problema asignado al grupo}\label{sec:probasig}
+After qualifying, medical students must take two six-month jobs in hospital departments, but they cannot take both jobs in the same department. A hospital has four students and vacancies in four departments: Casualty, Maternity, medical and Surgical. The number of fatal mistakes each student will make in each department is given by the table \ref{tab:tablaProblema}.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+ & \multicolumn{1}{l}{Casualty} & \multicolumn{1}{l}{Maternity} & \multicolumn{1}{l}{Medical} & \multicolumn{1}{l}{Surgical} \\ \midrule
+Student 1 & 3 & 0 & 2 & 6 \\
+Student 2 & 2 & 1 & 4 & 5 \\
+Student 3 & 4 & 2 & 5 & 7 \\
+Student 4 & 2 & 0 & 2 & 4 \\ \bottomrule
+\end{tabular}
+%\caption{Tabla de datos del problema propuesto}
+\label{tab:tablaProblema}
+\end{table}
+
+\begin{enumerate}
+    \item How should they be allotted to departments for the first job so as to minimize the total mistakes?
+    \item Given that allocation, how should the be allotted for the second six months so no one stays in the same job, and mistakes are minimized?
+\end{enumerate}
+
+
+\subsection{Problema general de asignación}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dignissim tellus. In at sollicitudin lorem. Proin eu mi luctus, tristique elit at, pulvinar turpis. Aliquam et est a tellus molestie posuere vitae non leo. In iaculis neque vitae lectus aliquam rutrum. Suspendisse erat felis, sagittis eget lorem eget, semper tempor leo. Pellentesque bibendum mi ac magna condimentum, at interdum justo aliquet. Sed id justo quam. 
+
+
+\section{Métodos de resolución}
+\subsection{Marco teórico}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dignissim tellus. In at sollicitudin lorem. Proin eu mi luctus, tristique elit at, pulvinar turpis. Aliquam et est a tellus molestie posuere vitae non leo. In iaculis neque vitae lectus aliquam rutrum. Suspendisse erat felis, sagittis eget lorem eget, semper tempor leo. Pellentesque bibendum mi ac magna condimentum, at interdum justo aliquet. Sed id justo quam. 
+
+\subsection{Descripción de los métodos}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dignissim tellus. In at sollicitudin lorem. Proin eu mi luctus, tristique elit at, pulvinar turpis. Aliquam et est a tellus molestie posuere vitae non leo. In iaculis neque vitae lectus aliquam rutrum. Suspendisse erat felis, sagittis eget lorem eget, semper tempor leo. Pellentesque bibendum mi ac magna condimentum, at interdum justo aliquet. Sed id justo quam. 
+
+\section{Resolución del problema propuesto}
+\subsection{Modelado mediante Programación Lineal}
+Tal y como hemos visto en el apartado \ref{sec:probasig}, los datos de nuestro problema de asignación se nos han dado en formato tabla. De esta tabla, los datos que más nos interesan son los errores que van a cometer los alumnos, que llamaremos $c$.\\
+Para modelar el problema mediante programación lineal nos ayudaremos de 16 variables binarias (que llamaremos $x_{i,j}$) que indicarán en que departamento serán asignados los alumnos.
+
+
+Nuestra ecuación a minimizar será $\sum{c_i x_{i,j}}$\\
+Además, necesitaremos varias restricciones para asegurarnos de obtener una solución correcta. En este caso necesitaremos de 5 restricciones, 4 para indicar que cada alumno necesita ser incluido a un único departamento y otra más para indicar que las variables son binarias.\\
+
+
+De esta forma, nos quedaría el siguiente problema:\\
+Sea $Z(x) = 3 x_{1,1} +0 x_{1,2} + 2 x_{1,3} + 6 x_{1,4} + 2 x_{2,1} + x_{2,2} + 4 x_{2,3} + 5 x_{2,4} + 4 x_{3,1} + 2 x_{3,2} + 5 x_{3,3} + 7 x_{3,4} + 2 x_{4,1} + 0 x_{4,2}+ 2 x_{4,3}+ 4 x_{4,4}$
+
+\begin{mini*}
+  {}{Z(x)}{}{}
+  \addConstraint{x_{1,1} + x_{1,2} + x_{1,3} + x_{1,4}}{=1}{}
+  \addConstraint{x_{2,1} + x_{2,2} + x_{2,3} + x_{2,4}}{=1}{}
+  \addConstraint{x_{3,1} + x_{3,2} + x_{3,3} + x_{3,4}}{=1}{}
+  \addConstraint{x_{4,1} + x_{4,2} + x_{4,3} + x_{4,4}}{=1}{}
+  \addConstraint{x_{i,j}}{\in \{0,1\}}{}
+\end{mini*}
+
+
+Al resolver este problema de programación lineal e interpretar los resultados nos encontraremos con la solución al primer apartado del problema.
+
+Para solucionar el segundo apartado necesitaremos tener en cuenta los resultados del primero ya que como vimos en el apartado \ref{sec:probasig} ningún alumno puede repetir departamento. Para asegurarnos de que esto es así realizaremos algunos cambios a los costes de nuestro problema, intercambiando el valor de los costes correspondientes con las soluciones del primer apartado por $M$, un número lo suficientemente grande para que esta solución sea penalizada.
+
+
+
+
+
+
+
+
+\subsection{Aplicación del método específico para la resolución del problema}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dignissim tellus. In at sollicitudin lorem. Proin eu mi luctus, tristique elit at, pulvinar turpis. Aliquam et est a tellus molestie posuere vitae non leo. In iaculis neque vitae lectus aliquam rutrum. Suspendisse erat felis, sagittis eget lorem eget, semper tempor leo. Pellentesque bibendum mi ac magna condimentum, at interdum justo aliquet. Sed id justo quam. 
+
+%Bibliografía
+\bibliographystyle{plain}
+\bibliography{referencias.bib}
+
+
+
+\end{document}
