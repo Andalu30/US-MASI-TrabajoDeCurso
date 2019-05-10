@@ -1,6 +1,7 @@
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[spanish,es-tabla]{babel}
+\usepackage[margin=35mm]{geometry} %Márgenes mas pequeños
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
@@ -9,12 +10,34 @@
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{optidef}
+\usepackage{pdfpages}
+\usepackage[normalem]{ulem}
+\usepackage{cancel}
+\usepackage{float}
+\usepackage{tikz}
+\restylefloat{table}
+
+\newcommand{\tikzmark}[2]{\tikz[overlay,remember picture,baseline] 
+\node [anchor=base] (#1) {$#2$};}
+
+\newcommand{\DrawVLine}[3][]{%
+  \begin{tikzpicture}[overlay,remember picture]
+    \draw[shorten <=0.3ex, #1] (#2.north) -- (#3.south);
+  \end{tikzpicture}
+}
+
+\newcommand{\DrawHLine}[3][]{%
+  \begin{tikzpicture}[overlay,remember picture]
+    \draw[shorten <=0.2em, #1] (#2.west) -- (#3.east);
+  \end{tikzpicture}
+}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 %Lo de arriba son como imports, no le heches cuenta ;)
 
 \title{
-        \textbf{Título del trabajo}\\
+        \textbf{Problema de optimización}\\
         \medskip
         \large{Trabajo de Curso}\\
         \bigskip
@@ -51,7 +74,7 @@ Participación: 50\%
 \section{Descripción del problema general de asignación}
 A continuación se muestra el ejercicio 15 del documento ``Supplementary Exercises'', el cual ha sido asignado a nuestro grupo.
 
-\subsection{Problema asignado al grupo}\label{sec:probasig}
+\subsection{Problema asignado al grupo}\label{sec:probasig}\
 After qualifying, medical students must take two six-month jobs in hospital departments, but they cannot take both jobs in the same department. A hospital has four students and vacancies in four departments: Casualty, Maternity, medical and Surgical. The number of fatal mistakes each student will make in each department is given by the table \ref{tab:tablaProblema}.
 
 \begin{table}[h!]
@@ -73,29 +96,41 @@ Student 4 & 2 & 0 & 2 & 4 \\ \bottomrule
     \item Given that allocation, how should the be allotted for the second six months so no one stays in the same job, and mistakes are minimized?
 \end{enumerate}
 
-
 \subsection{Problema general de asignación}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dignissim tellus. In at sollicitudin lorem. Proin eu mi luctus, tristique elit at, pulvinar turpis. Aliquam et est a tellus molestie posuere vitae non leo. In iaculis neque vitae lectus aliquam rutrum. Suspendisse erat felis, sagittis eget lorem eget, semper tempor leo. Pellentesque bibendum mi ac magna condimentum, at interdum justo aliquet. Sed id justo quam. 
+
 
 
 \section{Métodos de resolución}
 \subsection{Marco teórico}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dignissim tellus. In at sollicitudin lorem. Proin eu mi luctus, tristique elit at, pulvinar turpis. Aliquam et est a tellus molestie posuere vitae non leo. In iaculis neque vitae lectus aliquam rutrum. Suspendisse erat felis, sagittis eget lorem eget, semper tempor leo. Pellentesque bibendum mi ac magna condimentum, at interdum justo aliquet. Sed id justo quam. 
+
 
 \subsection{Descripción de los métodos}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dignissim tellus. In at sollicitudin lorem. Proin eu mi luctus, tristique elit at, pulvinar turpis. Aliquam et est a tellus molestie posuere vitae non leo. In iaculis neque vitae lectus aliquam rutrum. Suspendisse erat felis, sagittis eget lorem eget, semper tempor leo. Pellentesque bibendum mi ac magna condimentum, at interdum justo aliquet. Sed id justo quam. 
+\label{ref:metodohúngaro} El método húngaro es un método de optimización de problemas de asignación. 
+Este método utiliza la propiedad de reducción de matrices para reducir la matriz original de costo, hasta que los costos C i j asociados con la asignación óptima, sean cero y todos los otros costos sean no negativos. En cada iteración del método húngaro, se reduce la matriz de tal manera que haya al menos un cero en cada renglón y columna. El algoritmo está diseñado para la resolución de problemas de minimización únicamente.\\\\
+\textbf{Procedimiento:}\\
+El Método Húngaro consta de los siguientes pasos:\\
+
+\begin{itemize}
+    \item \textbf{Paso 1:} En la matriz original de costo, identificar el mínimo de cada fila y restarlo de todos los elementos de la fila.
+    \item \textbf{Paso 2:} En la matriz que resulte del Paso 1, identificar el mínimo de cada columna, y restarlo de todos los elementos de la columna.
+    \item \textbf{Paso 3:} Identificar la solución óptima como la asignación factible asociada con los elementos cero de la matriz obtenida en el Paso 2.
+\end{itemize}
+
+
+
 
 \section{Resolución del problema propuesto}
-\subsection{Modelado mediante Programación Lineal}
-Tal y como hemos visto en el apartado \ref{sec:probasig}, los datos de nuestro problema de asignación se nos han dado en formato tabla. De esta tabla, los datos que más nos interesan son los errores que van a cometer los alumnos, que llamaremos $c$.\\
-Para modelar el problema mediante programación lineal nos ayudaremos de 16 variables binarias (que llamaremos $x_{i,j}$) que indicarán en que departamento serán asignados los alumnos.
+\subsection{Resolución del problema considerando que no hay un mínimo de vacantes en cada departamento}
 
+\subsubsection{Modelado mediante Programación lineal del problema propuesto}\label{ref:proglineal}
+Tal y como hemos visto en el apartado \ref{sec:probasig}, los datos de nuestro problema de asignación se nos han dado en formato tabla. De esta tabla, los datos que más nos interesan son los errores que van a cometer los alumnos, que llamaremos $c$.\\
+Para modelar el problema mediante programación lineal nos ayudaremos de 16 variables binarias (que llamaremos $x_{i,j}$) que indicarán en que departamento serán asignados los alumnos.\\
 
 Nuestra ecuación a minimizar será $\sum{c_i x_{i,j}}$\\
 Además, necesitaremos varias restricciones para asegurarnos de obtener una solución correcta. En este caso necesitaremos de 5 restricciones, 4 para indicar que cada alumno necesita ser incluido a un único departamento y otra más para indicar que las variables son binarias.\\
 
-
 De esta forma, nos quedaría el siguiente problema:\\
+
 Sea $Z(x) = 3 x_{1,1} +0 x_{1,2} + 2 x_{1,3} + 6 x_{1,4} + 2 x_{2,1} + x_{2,2} + 4 x_{2,3} + 5 x_{2,4} + 4 x_{3,1} + 2 x_{3,2} + 5 x_{3,3} + 7 x_{3,4} + 2 x_{4,1} + 0 x_{4,2}+ 2 x_{4,3}+ 4 x_{4,4}$
 
 \begin{mini*}
@@ -107,10 +142,13 @@ Sea $Z(x) = 3 x_{1,1} +0 x_{1,2} + 2 x_{1,3} + 6 x_{1,4} + 2 x_{2,1} + x_{2,2} +
   \addConstraint{x_{i,j}}{\in \{0,1\}}{}
 \end{mini*}
 
-
+\subsubsection{Aplicación de un método de resolución para obtener el resultado al primer apartado}
 Al resolver este problema de programación lineal e interpretar los resultados nos encontraremos con la solución al primer apartado del problema.
 
-Para solucionar el segundo apartado necesitaremos tener en cuenta los resultados del primero ya que como vimos en el apartado \ref{sec:probasig} ningún alumno puede repetir departamento. Para asegurarnos de que esto es así realizaremos algunos cambios a los costes de nuestro problema, intercambiando el valor de los costes correspondientes con las soluciones del primer apartado por $M$, un número lo suficientemente grande para que esta solución sea penalizada.
+Un ejemplo de resolución se puede encontrar en la sección \ref{pdf:anexo}, en la que utilizamos SAGE para resolver este problema. \label{ref:modo1SAGE}
+
+\subsubsection{Aplicación de un método de resolución para obtener el resultado al segundo apartado}
+Para solucionar el segundo apartado necesitaremos tener en cuenta los resultados del primero ya que como vimos en el apartado \ref{sec:probasig} ningún alumno puede repetir departamento. Para asegurarnos de que esto es así realizaremos algunos cambios a los costes de nuestro problema, intercambiando el valor de los costes correspondientes con las soluciones del primer apartado por $M$, un número lo suficientemente grande para que esta solución sea penalizada y, de esta forma, asegurarnos de que los alumnos no pueden repetir departamento.
 
 
 
@@ -118,9 +156,194 @@ Para solucionar el segundo apartado necesitaremos tener en cuenta los resultados
 
 
 
+\subsection{Resolución del problema considerando que solo hay una vacante en cada departamento}
+\subsubsection{Modelado mediante Programación lineal del problema propuesto}
 
-\subsection{Aplicación del método específico para la resolución del problema}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dignissim tellus. In at sollicitudin lorem. Proin eu mi luctus, tristique elit at, pulvinar turpis. Aliquam et est a tellus molestie posuere vitae non leo. In iaculis neque vitae lectus aliquam rutrum. Suspendisse erat felis, sagittis eget lorem eget, semper tempor leo. Pellentesque bibendum mi ac magna condimentum, at interdum justo aliquet. Sed id justo quam. 
+El problema que nos resulta al considerar este caso es prácticamente el mismo que hemos visto en el apartado \ref{ref:proglineal}. 
+Sin embargo existe una diferencia muy importante, debemos introducir varias restricciones que nos indiquen que solo existe una vacante en cada departamento.\\
+
+De esta forma, al igual que en el caso anterior, para modelar el problema mediante programación lineal nos ayudaremos de 16 variables binarias (que llamaremos $x_{i,j}$) que indicarán en que departamento serán asignados los alumnos.\\
+
+
+Nuestra ecuación a minimizar será $\sum{c_i x_{i,j}}$ donde $c$ serán los errores que pueden cometer cada alumno en cada departamento y, además, tendremos las restricciones anteriores y 4 más, que nos indican que todos los departamentos reciben un alumno.
+
+De esta forma, nos quedaría el siguiente problema:\\
+
+
+Sea $Z(x) = 3 x_{1,1} +0 x_{1,2} + 2 x_{1,3} + 6 x_{1,4} + 2 x_{2,1} + x_{2,2} + 4 x_{2,3} + 5 x_{2,4} + 4 x_{3,1} + 2 x_{3,2} + 5 x_{3,3} + 7 x_{3,4} + 2 x_{4,1} + 0 x_{4,2}+ 2 x_{4,3}+ 4 x_{4,4}$
+
+\begin{mini*}
+  {}{Z(x)}{}{}
+  \addConstraint{x_{1,1} + x_{1,2} + x_{1,3} + x_{1,4}}{=1}{}
+  \addConstraint{x_{2,1} + x_{2,2} + x_{2,3} + x_{2,4}}{=1}{}
+  \addConstraint{x_{3,1} + x_{3,2} + x_{3,3} + x_{3,4}}{=1}{}
+  \addConstraint{x_{4,1} + x_{4,2} + x_{4,3} + x_{4,4}}{=1}{}
+  \addConstraint{x_{1,1} + x_{2,1} + x_{3,1} + x_{4,1}}{=1}{}
+  \addConstraint{x_{1,2} + x_{2,2} + x_{3,2} + x_{4,2}}{=1}{}
+  \addConstraint{x_{1,3} + x_{2,3} + x_{3,3} + x_{4,3}}{=1}{}
+  \addConstraint{x_{1,4} + x_{2,4} + x_{3,4} + x_{4,4}}{=1}{}
+  \addConstraint{x_{i,j}}{\in \{0,1\}}{}
+\end{mini*}
+
+\subsubsection{Aplicación de un método de resolución para obtener el resultado al primer apartado}
+
+Al resolver este problema de programación lineal e interpretar los resultados nos encontraremos con la solución al primer apartado del problema.\\
+
+En esta ocasión es posible resolver el problema mediante 2 métodos distintos, mediante SAGE, al igual que en el apartado \ref{ref:modo1SAGE} y con el método húngaro que se ha explicado en el apartado \ref{ref:metodohúngaro}.
+
+\begin{itemize}
+    \item La resolución mediante SAGE se puede ver en el anexo del apartado \ref{pdf:anexo}.
+    \item La resolución mediante el método húngaro se encuentra a continuación.\\
+\end{itemize}
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lccccl}
+\cline{1-5}
+ & \multicolumn{1}{l}{Casualty} & \multicolumn{1}{l}{Maternity} & \multicolumn{1}{l}{Medical} & \multicolumn{1}{l}{Surgical} &  \\ \cline{1-5}
+Student 1 & 3 & 0 & \textcircled{2} & 6 & 0 \\
+Student 2 & \textcircled{2} & 1 & 4 & 5 & 1 \\
+Student 3 & 4 & \textcircled{2} & 5 & 7 & 2 \\
+Student 4 & 2 & 0 & 2 & \textcircled{4} & 0 \\ \cline{1-5}
+\end{tabular}
+\caption{Paso 1 del método húngaro, primer apartado}
+\end{table}
+
+Explicacion??
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccc}
+\hline
+ & \multicolumn{1}{l}{Casualty} & \multicolumn{1}{l}{Maternity} & \multicolumn{1}{l}{Medical} & \multicolumn{1}{l}{Surgical} \\ \hline
+Student 1 & 3 & 0 & 2 & 6 \\
+Student 2 & 1 & 0 & 3 & 4 \\
+Student 3 & 3 & 0 & 3 & 5 \\
+Student 4 & 2 & 0 & 2 & 4 \\ \hline
+ & 1 &  & 2 & 4
+\end{tabular}
+\caption{Paso 2 del método húngaro, primer apartado}
+\end{table}
+
+Explicacion??
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccc}
+\hline
+ & \multicolumn{1}{l}{Casualty} & \multicolumn{1}{l}{Maternity} & \multicolumn{1}{l}{Medical} & \multicolumn{1}{l}{Surgical} \\ \hline
+Student 1 &  \tikzmark{iniciolin1}{2} & \tikzmark{iniciocol2}{0} & 0 & \tikzmark{finlin1}{2} \\
+Student 2 & \tikzmark{iniciolin2}{0} & 0 & 1 &  \tikzmark{finlin2}{0}\\
+Student 3 & 1 & 0 & 1 & 1 \\
+Student 4 & \tikzmark{iniciolin4}{1} & \tikzmark{fincol2}{0} & 0 & \tikzmark{finlin4}{0} \\ \hline
+\end{tabular}
+\DrawHLine[black, thick, opacity=0.8]{iniciolin1}{finlin1}
+\DrawHLine[black, thick, opacity=0.8]{iniciolin2}{finlin2}
+\DrawHLine[black, thick, opacity=0.8]{iniciolin4}{finlin4}
+\DrawVLine[black, thick, opacity=0.8]{iniciocol2}{fincol2}
+\caption{Paso 3 del método húngaro, primer apartado}
+\end{table}
+
+Explicacion??
+
+
+
+
+
+
+\subsubsection{Aplicación de un método de resolución para obtener el resultado al segundo apartado}
+
+Para solucionar el segundo apartado necesitaremos tener en cuenta los resultados del primero ya que como vimos en el apartado \ref{sec:probasig} ningún alumno puede repetir departamento.
+
+Una vez mas,  realizaremos algunos cambios a los costes de nuestro problema, intercambiando el valor de los costes correspondientes con las soluciones del primer apartado por $M$, un número lo suficientemente grande para que esta solución sea penalizada.
+
+Al igual que para el primer apartado, es posible solucionarlo mediante dos métodos distintos, SAGE y el método húngaro.
+
+\begin{itemize}
+    \item La resolución mediante SAGE se puede ver en el anexo del apartado \ref{pdf:anexo}.
+    \item La resolución mediante el método húngaro se encuentra a continuación.\\
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lccccl}
+\cline{1-5}
+ & \multicolumn{1}{l}{Casualty} & \multicolumn{1}{l}{Maternity} & \multicolumn{1}{l}{Medical} & \multicolumn{1}{l}{Surgical} &  \\ \cline{1-5}
+Student 1 & 3 & \textcircled{0} & M & 6 & 0 \\
+Student 2 & M & 1 & 4 & \textcircled{5} & 1 \\
+Student 3 & \textcircled{4} & M & 5 & 7 & 4 \\
+Student 4 & 2 & 0 & \textcircled{2} & M & 0 \\ \cline{1-5}
+\end{tabular}
+\caption{Paso 1 del método húngaro, segundo apartado}
+\end{table}
+
+Explicacion??
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccc}
+\hline
+ & \multicolumn{1}{l}{Casualty} & \multicolumn{1}{l}{Maternity} & \multicolumn{1}{l}{Medical} & \multicolumn{1}{l}{Surgical} \\ \hline
+Student 1 & 3 & 0 & M & 6 \\
+Student 2 & M-1 & 0 & 3 & 4 \\
+Student 3 & 0 & M-4 & 1 & 3 \\
+Student 4 & 2 & 0 & 2 & M \\ \hline
+& & & 1 & 3
+\end{tabular}
+\caption{Paso 2 del método húngaro, segundo apartado}
+\end{table}
+
+Explicación??
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccc}
+\hline
+ & \multicolumn{1}{l}{Casualty} & \multicolumn{1}{l}{Maternity} & \multicolumn{1}{l}{Medical} & \multicolumn{1}{l}{Surgical} \\ \hline
+Student 1 & 3 & \tikzmark{iniciocol2}{0} & M-1 & 3 \\
+Student 2 & M-1 & 0 & 2 & \textcircled{1} \\
+Student 3 & \tikzmark{iniciolin3}{0} & M-4 & 0 & \tikzmark{finlin3}{0} \\
+Student 4 & 2 & \tikzmark{fincol2}{0} & 1 & M-3 \\ \hline
+\end{tabular}
+\DrawHLine[black, thick, opacity=0.8]{iniciolin3}{finlin3}
+\DrawVLine[black, thick, opacity=0.8]{iniciocol2}{fincol2}
+\caption{Paso 3 del método húngaro, segundo apartado}
+\end{table}
+
+Explicacion??
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccc}
+\hline
+ & \multicolumn{1}{l}{Casualty} & \multicolumn{1}{l}{Maternity} & \multicolumn{1}{l}{Medical} & \multicolumn{1}{l}{Surgical} \\ \hline
+Student 1 & 2 & \tikzmark{incol2}{0} & M-2 & 2 \\
+Student 2 & \tikzmark{infil2}{M-2} & 0 & 1 & \tikzmark{finfil2}{0} \\
+Student 3 & \tikzmark{infil3}{0} & M-3 & 0 & \tikzmark{finfil3}{0} \\
+Student 4 & \tikzmark{infil4}{1} & \tikzmark{fincol2}0 & 0 & \tikzmark{finfil4}{M-4} \\ \hline
+\end{tabular}
+\DrawHLine[black, thick, opacity=0.8]{infil4}{finfil4}
+\DrawHLine[black, thick, opacity=0.8]{infil3}{finfil3}
+\DrawHLine[black, thick, opacity=0.8]{infil2}{finfil2}
+\DrawVLine[black, thick, opacity=0.8]{incol2}{fincol2}
+\caption{Paso 4 del método húngaro, segundo apartado}
+\end{table}
+
+Explicacion??
+
+
+
+
+
+
+
+\section{Anexo}
+A continuación se incluye una copia en PDF del archivo de SAGE en el que se resuelve el problema teniendo en cuenta las dos consideraciones.
+\includepdf[pages=-,frame]{Anexo1.pdf}\label{pdf:anexo}
 
 %Bibliografía
 \bibliographystyle{plain}
